@@ -1,0 +1,7 @@
+#phaser-game {
+  visibility: hidden;
+}
+
+#phaser-game.game-loaded {
+  visibility: visible;
+}
