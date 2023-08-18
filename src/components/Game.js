@@ -40,6 +40,9 @@ class Game extends React.Component {
         }
       },
       scene: {
+        init: function () {
+          this.setMana = setMana;
+        },
         preload: function () {
           this.load.image('player', 'assets/player/player.png');
           this.load.image('enemy', 'assets/player/playerlight.png');
@@ -51,6 +54,7 @@ class Game extends React.Component {
           this.player.setScale(0.2);
           this.player.mana = 100;
           this.heroUI = new HeroUI(this, this.player, setHealth, setMana);
+          this.setMana = this.heroUI.setMana.bind(this.heroUI);
           this.heroUI.create();
           this.player.setCollideWorldBounds(true);
           this.enemies = this.physics.add.group();
@@ -107,11 +111,13 @@ class Game extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.health !== prevProps.health) {
-      this.heroUI.setHealth(this.props.health);
-    }
-    if (this.props.mana !== prevProps.mana) {
-      this.heroUI.setMana(this.props.mana);
+    if (this.heroUI) {
+      if (this.props.health !== prevProps.health) {
+        this.heroUI.setHealth(this.props.health);
+      }
+      if (this.props.mana !== prevProps.mana) {
+        this.heroUI.setMana(this.props.mana);
+      }
     }
   }
 
@@ -137,8 +143,8 @@ Game.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  health: state.health,
-  mana: state.mana,
+  health: state.game.health,
+  mana: state.game.mana,
 });
 
 const mapDispatchToProps = dispatch => ({

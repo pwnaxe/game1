@@ -69,7 +69,8 @@ class Skills {
     this.scene.physics.add.overlap(fireball, this.scene.enemies, this.onFireballHitEnemy, null, this);
 
     this.scene.player.mana -= 10; // Zmniejsz wartość many gracza
-    this.setMana(this.scene.player.mana); // Uaktualnij wartość many w UI
+    this.scene.setMana(this.scene.player.mana);
+
   }
 
   onFireballHitEnemy(fireball, enemy) {
