@@ -5,6 +5,7 @@ class Skills {
     this.scene = scene;
     this.setHealth = setHealth;
     this.setMana = setMana;
+    this.isResting = false;
   }
 
   preload() {
@@ -51,8 +52,6 @@ class Skills {
   }
 
   activateSkill1() {
-    console.log("Umiejętność 1 aktywowana!");
-
     if (this.scene.player.mana < 10) {
       console.log("Za mało many!");
       return;
@@ -91,8 +90,32 @@ class Skills {
   }
 
   activateSkill4() {
-    console.log("Umiejętność 4 aktywowana!");
+    if (this.isResting) {
+      return;
+    }
+    this.isResting = true;
+    const totalManaToRegen = 50;
+    const totalHealthToRegen = 50;
+    const regenInterval = 1000;
+    const regenRateMana = totalManaToRegen / 5;
+    const regenRateHealth = totalHealthToRegen / 5;
+
+    const regenTimer = this.scene.time.addEvent({
+      delay: regenInterval,
+      repeat: 4,
+      callback: () => {
+        this.scene.player.mana += regenRateMana;
+        this.scene.player.health += regenRateHealth;
+        this.scene.setMana(this.scene.player.mana);
+        this.scene.setHealth(this.scene.player.health);
+      },
+      callbackScope: this,
+      onComplete: () => {
+        this.isResting = false;
+      }
+    });
   }
 }
+
 
 export default Skills;

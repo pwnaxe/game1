@@ -42,6 +42,7 @@ class Game extends React.Component {
       scene: {
         init: function () {
           this.setMana = setMana;
+          this.setHealth = setHealth;
         },
         preload: function () {
           this.load.image('player', 'assets/player/player.png');
@@ -65,7 +66,6 @@ class Game extends React.Component {
             this.enemies.add(enemy);
           }
           this.cursors = this.input.keyboard.createCursorKeys();
-          this.skills = new Skills(this);
           this.skills.create();
         },
         update: function () {
