@@ -6,6 +6,7 @@ import { connect, Provider } from 'react-redux';
 import store from './store';
 import PropTypes from 'prop-types';
 import { setHealth, setMana } from './slice';
+import io from 'socket.io-client';
 
 
 class Game extends React.Component {
@@ -28,6 +29,7 @@ class Game extends React.Component {
 
   componentDidMount() {
     let { setHealth, setMana } = this.props;
+    const socket = io('http://localhost:3000');
     const config = {
       type: Phaser.AUTO,
       width: 800,
@@ -51,6 +53,7 @@ class Game extends React.Component {
           this.skills.preload();
         },
         create: function () {
+          this.socket = socket;
           this.player = this.physics.add.sprite(400, 300, 'player');
           this.player.setScale(0.2);
           this.player.mana = 100;
@@ -67,6 +70,9 @@ class Game extends React.Component {
           }
           this.cursors = this.input.keyboard.createCursorKeys();
           this.skills.create();
+          this.socket.on('updatePosition', (data) => {
+            // Aktualizuj pozycję gracza na podstawie danych z serwera
+          });
         },
         update: function () {
           if (this.cursors.left.isDown) {
@@ -103,6 +109,7 @@ class Game extends React.Component {
             }
           });
           this.heroUI.update();
+          this.socket.emit('move', { x: this.player.x, y: this.player.y });
         }
       }
     };
