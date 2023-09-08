@@ -86,8 +86,9 @@ class Game extends React.Component {
           }
           this.cursors = this.input.keyboard.createCursorKeys();
           this.skills.create();
-          this.socket.on('updatePosition', (data) => {
-            // Tu kod do aktualizacji pozycji
+          this.socket.on('updateAllPlayers', (players) => {
+            // Aktualizuj stan graczy na podstawie danych z serwera
+            // ...
           });
         },
         update: function () {
