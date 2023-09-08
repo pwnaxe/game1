@@ -54,6 +54,22 @@ class Game extends React.Component {
         },
         create: function () {
           this.socket = socket;
+          this.otherPlayers = this.physics.add.group();
+          this.socket.emit('newPlayer');
+          this.socket.on('updateAllPlayers', (players) => {
+            players.forEach((player) => {
+              if (player.id !== this.socket.id) {
+                let otherPlayer = this.otherPlayers.getChildren().find(p => p.playerId === player.id);
+                if (!otherPlayer) {
+                  otherPlayer = this.physics.add.sprite(player.x, player.y, 'enemy');
+                  otherPlayer.playerId = player.id;
+                  this.otherPlayers.add(otherPlayer);
+                } else {
+                  otherPlayer.setPosition(player.x, player.y);
+                }
+              }
+            });
+          });
           this.player = this.physics.add.sprite(400, 300, 'player');
           this.player.setScale(0.2);
           this.player.mana = 100;
@@ -71,7 +87,7 @@ class Game extends React.Component {
           this.cursors = this.input.keyboard.createCursorKeys();
           this.skills.create();
           this.socket.on('updatePosition', (data) => {
-            // Aktualizuj pozycję gracza na podstawie danych z serwera
+            // Tu kod do aktualizacji pozycji
           });
         },
         update: function () {
