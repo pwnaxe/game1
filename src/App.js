@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import Game from './components/Game';
+import Login from './components/Login';
+import ConnectedGame from './components/Game';
 import Navbar from './components/Navbar';
 import Box from '@mui/material/Box';
 
-function App() {
+
+const App = () => {
+  const [username, setUsername] = useState(null);
+
+  const handleLogin = (username) => {
+    setUsername(username);
+  };
+
   return (
-    <>
-      <Navbar />
+    <><Navbar />
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Game />
+
+        {username ? (
+          <ConnectedGame username={username} />
+        ) : (
+          <Login onLogin={handleLogin} />
+        )}
       </Box>
     </>
   );
-}
-
+};
 export default App;

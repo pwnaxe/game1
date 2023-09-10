@@ -27,9 +27,14 @@ class Game extends React.Component {
 
   gameContainer = React.createRef();
 
+  onFireballHitOtherPlayer = (fireball, otherPlayer) => {
+    fireball.destroy();
+    this.socket.emit('useSkill', { targetId: otherPlayer.playerId, damage: 20, manaCost: 10 });
+  }
+
   componentDidMount() {
     let { setHealth, setMana } = this.props;
-    const socket = io('http://localhost:3000');
+    const socket = io('http://185.180.207.133:3000');
     const config = {
       type: Phaser.AUTO,
       width: 800,
@@ -87,8 +92,12 @@ class Game extends React.Component {
           this.cursors = this.input.keyboard.createCursorKeys();
           this.skills.create();
           this.socket.on('updateAllPlayers', (players) => {
-            // Aktualizuj stan graczy na podstawie danych z serwera
-            // ...
+            players.forEach((player) => {
+              if (player.id === this.socket.id) {
+                this.setHealth(player.health);
+                this.setMana(player.mana);
+              }
+            });
           });
         },
         update: function () {
